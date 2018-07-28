@@ -71,15 +71,17 @@ export class AppComponent {
 
     let sourceBox = this.getBox(sourceBoxId);
     let targetBox = this.getBox(targetBoxId);
-    
-    this.swap(sourceBox, targetBox);
-    this.copyTextContentsIntoArray();
 
-    if(this.isPuzzleSolved()) {
-      this.messages.textContent = 'Puzzle solved!!!';
-    }
+    if(sourceBox.nativeElement.textContent !== targetBox.nativeElement.textContent) {
+      this.swap(sourceBox, targetBox);
+      this.copyTextContentsIntoArray();
 
-    this.addRemoveEventHandlersToSquares();
+      if(this.isPuzzleSolved()) {
+        this.messages.textContent = 'Puzzle solved!!!';
+      }
+
+      this.addRemoveEventHandlersToSquares();
+    }    
   }
 
   private swapTextContent(source, target): void {
@@ -191,15 +193,6 @@ export class AppComponent {
           this.isBox9ToTheRight(s.nativeElement)) {
           this.renderer.listen(s.nativeElement, 'dragstart', this.drag.bind(this));
           this.renderer.setProperty(s.nativeElement, 'draggable', true);
-        }
-        else {
-          let removeDrop = this.renderer.listen(s.nativeElement, 'drop', this.drop.bind(this));
-          let removeDragover = this.renderer.listen(s.nativeElement, 'dragover', this.allowDrop.bind(this));
-          
-          removeDrop();
-          removeDragover();
-          
-          this.renderer.setProperty(s.nativeElement, 'draggable', false);
         }
       }
     });
