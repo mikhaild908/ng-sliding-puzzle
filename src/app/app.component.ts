@@ -12,7 +12,8 @@ const solved = [
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @ViewChild('messages') messages;
+  //@ViewChild('messages') messages;
+  messages: string = '';
   @ViewChild('newGameButton') newGameButton;
   @ViewChild('box1') box1: ElementRef;
   @ViewChild('box2') box2: ElementRef;
@@ -77,11 +78,11 @@ export class AppComponent {
       this.copyTextContentsIntoArray();
 
       if(this.isPuzzleSolved()) {
-        this.messages.textContent = 'Puzzle solved!!!';
-      }
+        this.messages = 'Puzzle solved!!!';
+      }  
+    }
 
-      this.addRemoveEventHandlersToSquares();
-    }    
+    this.addRemoveEventHandlersToSquares();   
   }
 
   private swapTextContent(source, target): void {
@@ -180,11 +181,14 @@ export class AppComponent {
       this.renderer.setProperty(s.nativeElement, 'draggable', false);
     });
 
+    if(this.isPuzzleSolved()) {
+      return;
+    }
+
     this.squares.forEach(s => {
       if (s.nativeElement.textContent === '9') {
-        this.renderer.listen(s.nativeElement, 'dragover', this.allowDrop.bind(this))
         this.renderer.listen(s.nativeElement, 'drop', this.drop.bind(this));
-        this.renderer.setProperty(s.nativeElement, 'draggable', false);
+        this.renderer.listen(s.nativeElement, 'dragover', this.allowDrop.bind(this));
       }
       else {
         if(this.isBox9Below(s.nativeElement) ||
@@ -199,14 +203,14 @@ export class AppComponent {
   }
 
   private isPuzzleSolved(): boolean {
-      for(let i = 0; i < this.x.length; i++) {
-          for(let j = 0; j < this.x.length; j++) {
-              if(this.x[i][j] != solved[i][j]) {
-                  return false;
-              }
-          }    
-      }
-      return true;
+    for(let i = 0; i < this.x.length; i++) {
+        for(let j = 0; j < this.x.length; j++) {
+            if(this.x[i][j] != solved[i][j]) {
+                return false;
+            }
+        }    
+    }
+    return true;
   }
 
   private scramblePuzzlePieces(): void {
