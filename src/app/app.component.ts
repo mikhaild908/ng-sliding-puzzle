@@ -47,8 +47,7 @@ export class AppComponent {
 
     this.scramblePuzzlePieces();
     this.copyTextContentsIntoArray();
-    this.addEventHandlersToSquares();
-    this.setDraggable();
+    this.addRemoveEventHandlersToSquares();
   }
 
   private swap(source: ElementRef, target: ElementRef): void {
@@ -80,7 +79,7 @@ export class AppComponent {
       this.messages.textContent = 'Puzzle solved!!!';
     }
 
-    this.setDraggable();
+    this.addRemoveEventHandlersToSquares();
   }
 
   private swapTextContent(source, target): void {
@@ -166,18 +165,23 @@ export class AppComponent {
       return false;
   }
 
-  private addEventHandlersToSquares(): void {
+  private addRemoveEventHandlersToSquares(): void {
     this.squares.forEach(s => { 
-      this.renderer.listen(s.nativeElement, 'drop', this.drop.bind(this));
-      this.renderer.listen(s.nativeElement, 'dragover', this.allowDrop.bind(this));
-      this.renderer.listen(s.nativeElement, 'dragstart', this.drag.bind(this));
+      let removeDrop = this.renderer.listen(s.nativeElement, 'drop', this.drop.bind(this));
+      let removeDragover = this.renderer.listen(s.nativeElement, 'dragover', this.allowDrop.bind(this));
+      let removeDragstart = this.renderer.listen(s.nativeElement, 'dragstart', this.drag.bind(this));
+
+      removeDrop();
+      removeDragover();
+      removeDragstart();
+
       this.renderer.setProperty(s.nativeElement, 'draggable', false);
     });
-  }
 
-  private setDraggable(): void {
     this.squares.forEach(s => {
       if (s.nativeElement.textContent === '9') {
+        this.renderer.listen(s.nativeElement, 'dragover', this.allowDrop.bind(this))
+        this.renderer.listen(s.nativeElement, 'drop', this.drop.bind(this));
         this.renderer.setProperty(s.nativeElement, 'draggable', false);
       }
       else {
@@ -185,9 +189,16 @@ export class AppComponent {
           this.isBox9OnTop(s.nativeElement) ||
           this.isBox9ToTheLeft(s.nativeElement) ||
           this.isBox9ToTheRight(s.nativeElement)) {
+          this.renderer.listen(s.nativeElement, 'dragstart', this.drag.bind(this));
           this.renderer.setProperty(s.nativeElement, 'draggable', true);
         }
         else {
+          let removeDrop = this.renderer.listen(s.nativeElement, 'drop', this.drop.bind(this));
+          let removeDragover = this.renderer.listen(s.nativeElement, 'dragover', this.allowDrop.bind(this));
+          
+          removeDrop();
+          removeDragover();
+          
           this.renderer.setProperty(s.nativeElement, 'draggable', false);
         }
       }
