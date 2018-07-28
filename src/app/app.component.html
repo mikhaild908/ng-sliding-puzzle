@@ -3,18 +3,21 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
+<div class="canvas">
+  <div class="board">
+      <div #box1 id="box1" class="square" draggable="false">1</div>
+      <div #box2 id="box2" class="square" draggable="false">2</div>
+      <div #box3 id="box3" class="square" draggable="false">3</div>
+      <div #box4 id="box4" class="square" draggable="false">4</div>
+      <div #box5 id="box5" class="square" draggable="false">5</div>
+      <div #box6 id="box6" class="square" draggable="false">6</div>
+      <div #box7 id="box7" class="square" draggable="false">7</div>
+      <div #box8 id="box8" class="square" draggable="false">8</div>
+      <div #box9 id="box9" class="square" draggable="false">9</div>
+  </div>
+  <br />
+  <input #newGameButton type="button" value="New Game" (click) = 'reloadPage();'>
+  <br />
+  <div #messages></div>
+</div>
