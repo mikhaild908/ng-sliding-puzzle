@@ -30,16 +30,28 @@ export class AppComponent {
     [0, 0, 0],
     [0, 0, 0]
   ];
+  squares = [];
 
   constructor(private renderer: Renderer2) { }
 
   ngOnInit() {
+    this.squares = [this.box1,
+      this.box2,
+      this.box3,
+      this.box4,
+      this.box5,
+      this.box6,
+      this.box7,
+      this.box8,
+      this.box9];
+
     this.scramblePuzzlePieces();
     this.copyTextContentsIntoArray();
-    this.addRemoveEventListenersToSquares();
+    this.addEventHandlersToSquares();
+    this.setDraggable();
   }
 
-  swap(source: ElementRef, target: ElementRef): void {
+  private swap(source: ElementRef, target: ElementRef): void {
     this.swapBackgrounds(source, target);
     this.swapTextContent(source, target);
   }
@@ -53,22 +65,22 @@ export class AppComponent {
   }
 
   private drop(event): void {
-      event.preventDefault();
-      
-      let sourceBoxId = event.dataTransfer.getData('text').toString().replace('box', '');
-      let targetBoxId = event.target.id.toString().replace('box', '');
-      
-      let sourceBox = this.getBox(sourceBoxId);
-      let targetBox = this.getBox(targetBoxId);
-      
-      this.swap(sourceBox, targetBox);
-      this.copyTextContentsIntoArray();
+    event.preventDefault();
+    
+    let sourceBoxId = event.dataTransfer.getData('text').toString().replace('box', '');
+    let targetBoxId = event.target.id.toString().replace('box', '');
 
-      if(this.isPuzzleSolved()) {
-          this.messages.textContent = 'Puzzle solved!!!';
-      }
+    let sourceBox = this.getBox(sourceBoxId);
+    let targetBox = this.getBox(targetBoxId);
+    
+    this.swap(sourceBox, targetBox);
+    this.copyTextContentsIntoArray();
 
-      this.addRemoveEventListenersToSquares();
+    if(this.isPuzzleSolved()) {
+      this.messages.textContent = 'Puzzle solved!!!';
+    }
+
+    this.setDraggable();
   }
 
   private swapTextContent(source, target): void {
@@ -78,13 +90,9 @@ export class AppComponent {
   }
   
   private swapBackgrounds(source:ElementRef, target:ElementRef): void {
-      //let sourceBoxBackground = window.getComputedStyle(source.nativeElement, null).getPropertyValue('background');
-      //target.style.background = sourceBoxBackground;
-      //source.style.background = 'black';
-
-      let sourceBoxBackground = window.getComputedStyle(source.nativeElement, null).getPropertyValue('background');
-      this.renderer.setStyle(target.nativeElement, 'background', sourceBoxBackground);
-      this.renderer.setStyle(source.nativeElement, 'background', 'black');
+    let sourceBoxBackground = window.getComputedStyle(source.nativeElement, null).getPropertyValue('background');
+    this.renderer.setStyle(target.nativeElement, 'background', sourceBoxBackground);
+    this.renderer.setStyle(source.nativeElement, 'background', 'black');
   }
 
   private copyTextContentsIntoArray(): void {
@@ -131,11 +139,11 @@ export class AppComponent {
   }
 
   private isBox9OnTop(box): boolean {
-      let boxNumber = box.id.replace('box', '');
-      if(Number(boxNumber) <= this.x.length) {
+      let boxNumber = (Number)(box.id.replace('box', ''));
+      if(boxNumber <= this.x.length) {
           return false;
       }
-      let boxOnTop = document.getElementById('box'.concat((Number(boxNumber) - this.x.length).toString()));
+      let boxOnTop = document.getElementById('box'.concat((boxNumber - this.x.length).toString()));
       let boxOnTopTextContent = boxOnTop.textContent;
       
       if(boxOnTopTextContent == '9') {
@@ -145,11 +153,11 @@ export class AppComponent {
   }
 
   private isBox9Below(box): boolean {
-      let boxNumber = box.id.replace('box', '');
+      let boxNumber = (Number)(box.id.replace('box', ''));
       if(boxNumber > this.x.length * (this.x.length - 1)) {
           return false;
       }
-      let boxBelow = document.getElementById('box'.concat((Number(boxNumber) + this.x.length).toString()));
+      let boxBelow = document.getElementById('box'.concat((boxNumber + this.x.length).toString()));
       let boxBelowTextContent = boxBelow.textContent;
       
       if(boxBelowTextContent == '9') {
@@ -158,35 +166,32 @@ export class AppComponent {
       return false;
   }
 
-  private addRemoveEventListenersToSquares(): void {
-      let squares = document.getElementsByClassName('square');
-      
-      for(let i = 0; i < squares.length; i++) {
-          squares[i].removeEventListener("drop", this.drop);
-          squares[i].removeEventListener("dragover", this.allowDrop);
-          squares[i].removeEventListener("dragstart", this.drag);
-          
-          squares[i]["draggable"] = false;
+  private addEventHandlersToSquares(): void {
+    this.squares.forEach(s => { 
+      this.renderer.listen(s.nativeElement, 'drop', this.drop.bind(this));
+      this.renderer.listen(s.nativeElement, 'dragover', this.allowDrop.bind(this));
+      this.renderer.listen(s.nativeElement, 'dragstart', this.drag.bind(this));
+      this.renderer.setProperty(s.nativeElement, 'draggable', false);
+    });
+  }
+
+  private setDraggable(): void {
+    this.squares.forEach(s => {
+      if (s.nativeElement.textContent === '9') {
+        this.renderer.setProperty(s.nativeElement, 'draggable', false);
       }
-      
-      for(let i = 0; i < this.x.length; i++) {
-          for(let j = 0; j < this.x.length; j++) {
-              let currentBox = squares[i * this.x.length + j];
-              if(currentBox.textContent == '9') {
-                  currentBox.addEventListener('drop', this.drop, false);
-                  currentBox.addEventListener('dragover', this.allowDrop, false);
-              }
-              else {
-                  if(this.isBox9Below(currentBox) ||
-                    this.isBox9OnTop(currentBox) ||
-                    this.isBox9ToTheLeft(currentBox) ||
-                    this.isBox9ToTheRight(currentBox)) {
-                      currentBox.addEventListener('dragstart', this.drag, false);
-                      currentBox['draggable'] = true;
-                  }
-              }
-          }
+      else {
+        if(this.isBox9Below(s.nativeElement) ||
+          this.isBox9OnTop(s.nativeElement) ||
+          this.isBox9ToTheLeft(s.nativeElement) ||
+          this.isBox9ToTheRight(s.nativeElement)) {
+          this.renderer.setProperty(s.nativeElement, 'draggable', true);
+        }
+        else {
+          this.renderer.setProperty(s.nativeElement, 'draggable', false);
+        }
       }
+    });
   }
 
   private isPuzzleSolved(): boolean {
