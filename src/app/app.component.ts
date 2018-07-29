@@ -12,7 +12,6 @@ const solved = [
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  //@ViewChild('messages') messages;
   messages: string = '';
   @ViewChild('newGameButton') newGameButton;
   @ViewChild('box1') box1: ElementRef;
@@ -70,19 +69,26 @@ export class AppComponent {
     let sourceBoxId = event.dataTransfer.getData('text').toString().replace('box', '');
     let targetBoxId = event.target.id.toString().replace('box', '');
 
+    if(sourceBoxId === targetBoxId) {
+      return;
+    }
+
     let sourceBox = this.getBox(sourceBoxId);
     let targetBox = this.getBox(targetBoxId);
 
-    if(sourceBox.nativeElement.textContent !== targetBox.nativeElement.textContent) {
-      this.swap(sourceBox, targetBox);
-      this.copyTextContentsIntoArray();
-
-      if(this.isPuzzleSolved()) {
-        this.messages = 'Puzzle solved!!!';
-      }  
+    // TODO: why do I need to check this???
+    if (sourceBox.nativeElement['draggable'] === false) { 
+      return; 
     }
 
-    this.addRemoveEventHandlersToSquares();   
+    this.swap(sourceBox, targetBox);
+    this.copyTextContentsIntoArray();
+
+    if(this.isPuzzleSolved()) {
+      this.messages = 'Puzzle solved!!!';
+    }
+
+    this.addRemoveEventHandlersToSquares();
   }
 
   private swapTextContent(source, target): void {
@@ -195,7 +201,7 @@ export class AppComponent {
           this.isBox9OnTop(s.nativeElement) ||
           this.isBox9ToTheLeft(s.nativeElement) ||
           this.isBox9ToTheRight(s.nativeElement)) {
-          this.renderer.listen(s.nativeElement, 'dragstart', this.drag.bind(this));
+          s.nativeElement.addEventListener('dragstart', this.drag.bind(this));
           this.renderer.setProperty(s.nativeElement, 'draggable', true);
         }
       }
@@ -214,7 +220,7 @@ export class AppComponent {
   }
 
   private scramblePuzzlePieces(): void {
-      // TODO:
+      // TODO: make this random
       this.swap(this.getBox('6'), this.getBox('9'));
       this.swap(this.getBox('3'), this.getBox('6'));
       this.swap(this.getBox('2'), this.getBox('3'));
