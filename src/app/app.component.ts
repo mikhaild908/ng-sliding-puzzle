@@ -49,7 +49,7 @@ export class AppComponent {
       this.box8,
       this.box9];
 
-    this.scramblePuzzlePieces();
+    this.scramblePuzzlePieces(10);
     this.copyTextContentsIntoArray();
     this.addRemoveEventHandlersToSquares();
   }
@@ -77,8 +77,8 @@ export class AppComponent {
       return;
     }
 
-    let sourceBox = this.getBox(sourceBoxId);
-    let targetBox = this.getBox(targetBoxId);
+    let sourceBox = this.getBoxById(sourceBoxId);
+    let targetBox = this.getBoxById(targetBoxId);
 
     this.swap(sourceBox, targetBox);
     this.copyTextContentsIntoArray();
@@ -218,19 +218,60 @@ export class AppComponent {
     return true;
   }
 
-  private scramblePuzzlePieces(): void {
-      // TODO: make this random
-      this.swap(this.getBox('6'), this.getBox('9'));
-      this.swap(this.getBox('3'), this.getBox('6'));
-      this.swap(this.getBox('2'), this.getBox('3'));
-      this.swap(this.getBox('1'), this.getBox('2'));
-      this.swap(this.getBox('4'), this.getBox('1'));
-      this.swap(this.getBox('7'), this.getBox('4'));
-      this.swap(this.getBox('8'), this.getBox('7'));
-      this.swap(this.getBox('5'), this.getBox('8'));
+  private scramblePuzzlePieces(maxNumberOfMoves): void {
+      //this.manualScramble();
+
+      for(let i:number = 0; i < maxNumberOfMoves; i++) {
+        let swappable = this.getSwappable();
+        //console.log(swappable);
+
+        let swapWith9 = null;
+        
+        while(swapWith9 === null) {
+          let random = this.getRandomInt(3);
+
+          while(swappable[random] === null || swappable[random].textContent === '9') {
+            random = this.getRandomInt(3);
+          }
+          
+          swapWith9 = this.getBoxByTextContent(swappable[random].textContent);
+        }
+
+        this.swap(swapWith9, this.getBoxByTextContent('9'));
+
+        swapWith9 = null;
+      }
   }
 
-  private getBox(id:string): ElementRef {
+  private getSwappable(): [HTMLElement, HTMLElement, HTMLElement] {
+    let swappable: [HTMLElement, HTMLElement, HTMLElement] = [null, null, null];
+    
+    this.squares.forEach(s => {
+      if (s.nativeElement.textContent === '9') {
+        // do nothing
+      }
+      else {
+        if(this.isBox9Below(s.nativeElement) ||
+           this.isBox9OnTop(s.nativeElement) ||
+           this.isBox9ToTheLeft(s.nativeElement) ||
+           this.isBox9ToTheRight(s.nativeElement)) {
+          if(swappable[0] === null) {
+            swappable[0] = s.nativeElement;
+          }
+          else if (swappable[1] === null){
+            swappable[1] = s.nativeElement;
+          }
+          else {
+            swappable[2] = s.nativeElement;
+          }
+        }
+      }
+    });
+
+    return swappable;
+  }
+
+  private getBoxById(id:string): ElementRef {
     switch (id) {
       case '1': {
         return this.box1;
@@ -262,7 +303,30 @@ export class AppComponent {
     }
   }
 
+  private getBoxByTextContent(content: string) {
+    for(let i = 0; i < this.squares.length; i++) {
+      if (this.squares[i].nativeElement.textContent === content) {
+        return this.squares[i];
+      }
+    }
+  }
+
   private reloadPage(): void {
     location.reload();
+  }
+
+  private getRandomInt(max: number): number {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
+  private manualScramble(): void {
+    this.swap(this.getBoxById('6'), this.getBoxById('9'));
+    this.swap(this.getBoxById('3'), this.getBoxById('6'));
+    this.swap(this.getBoxById('2'), this.getBoxById('3'));
+    this.swap(this.getBoxById('1'), this.getBoxById('2'));
+    this.swap(this.getBoxById('4'), this.getBoxById('1'));
+    this.swap(this.getBoxById('7'), this.getBoxById('4'));
+    this.swap(this.getBoxById('8'), this.getBoxById('7'));
+    this.swap(this.getBoxById('5'), this.getBoxById('8'));
   }
 }
