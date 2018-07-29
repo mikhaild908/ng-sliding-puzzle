@@ -103,10 +103,9 @@ export class AppComponent {
   }
 
   private copyTextContentsIntoArray(): void {
-    let squares = document.getElementsByClassName('square');
     for(let i = 0; i < this.x.length; i++) {
         for(let j = 0; j < this.x.length; j++) {
-            this.x[i][j] = Number(squares[i * this.x.length + j].textContent);
+            this.x[i][j] = Number(this.squares[i * this.x.length + j].nativeElement.textContent);
         }
     }
   }
