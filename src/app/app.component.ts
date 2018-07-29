@@ -24,7 +24,7 @@ export class AppComponent {
   @ViewChild('box8') box8: ElementRef;
   @ViewChild('box9') box9: ElementRef;
 
-  title = 'Sliding Puzzle';
+  title = 'Smiley Sliding Puzzle';
   x = [
     [0, 0, 0],
     [0, 0, 0],

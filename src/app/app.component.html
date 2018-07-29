@@ -1,11 +1,10 @@
-<!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
-    Welcome to {{ title }}!
+    {{ title }}
   </h1>
 </div>
-<div class="canvas">
-  <div class="board">
+<div class='container'>
+  <div class='canvas row justify-content-center'>
       <div #box1 id="box1" class="square" draggable="false">1</div>
       <div #box2 id="box2" class="square" draggable="false">2</div>
       <div #box3 id="box3" class="square" draggable="false">3</div>
@@ -15,9 +14,15 @@
       <div #box7 id="box7" class="square" draggable="false">7</div>
       <div #box8 id="box8" class="square" draggable="false">8</div>
       <div #box9 id="box9" class="square" draggable="false">9</div>
+    </div>
+</div>
+<div class='container'>
+  <div class='row justify-content-center'>
+      <input #newGameButton type="button" value="New Game" (click) = 'reloadPage();' class='btn btn-primary' id='new-game-button'/>
   </div>
-  <br />
-  <input #newGameButton type="button" value="New Game" (click) = 'reloadPage();'>
-  <br />
-  <div>{{messages}}</div>
+</div>
+<div class='container'>
+  <div class='row justify-content-center message'>
+      <div *ngIf='isPuzzleSolved()' class="alert alert-success" role="alert">{{messages}}</div>
+  </div>
 </div>

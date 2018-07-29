@@ -2,9 +2,24 @@ div {
     display: block;
 }
 .canvas {
-    width: 400px;
-    height: 400px;
+    width: 360px;
+    height: 360px;
+    margin: 10px auto;
 }
+
+#new-game-button {
+    margin: 10px auto;
+    display: block;
+    width: 360px;
+    height: 50px;
+}
+
+.message {
+    margin: 10px auto;
+    display: block;
+    width: 360px;
+}
+
 .square {
     float: left;
     width: 120px;
@@ -13,6 +28,7 @@ div {
     border: 1px solid white;
     color: transparent;
 }
+
 #box1 {
     background: url('../assets/smiley.png') 0 0;
 }
