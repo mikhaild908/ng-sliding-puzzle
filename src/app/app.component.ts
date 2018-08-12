@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 
-const solved = [
+const puzzleSolved = [
   [1, 2, 3],
   [4, 5, 6],
   [7, 8, 9]
@@ -24,7 +24,7 @@ export class AppComponent {
   @ViewChild('box8') box8: ElementRef;
   @ViewChild('box9') box9: ElementRef;
 
-  x = [
+  puzzleStatus = [
     [0, 0, 0],
     [0, 0, 0],
     [0, 0, 0]
@@ -82,11 +82,6 @@ export class AppComponent {
 
     this.swap(sourceBox, targetBox);
     this.copyTextContentsIntoArray();
-
-    // if (this.isPuzzleSolved()) {
-    //   this.messages = 'Puzzle solved!!!';
-    // }
-
     this.addRemoveEventHandlersToSquares();
   }
 
@@ -103,16 +98,16 @@ export class AppComponent {
   }
 
   private copyTextContentsIntoArray(): void {
-    for (let i = 0; i < this.x.length; i++) {
-        for (let j = 0; j < this.x.length; j++) {
-            this.x[i][j] = Number(this.squares[i * this.x.length + j].nativeElement.textContent);
+    for (let i = 0; i < this.puzzleStatus.length; i++) {
+        for (let j = 0; j < this.puzzleStatus.length; j++) {
+            this.puzzleStatus[i][j] = Number(this.squares[i * this.puzzleStatus.length + j].nativeElement.textContent);
         }
     }
   }
 
   private isBox9ToTheRight(box: HTMLElement): boolean {
     const boxNumber = box.id.replace('box', '');
-    const modulus = Number(boxNumber) % this.x.length;
+    const modulus = Number(boxNumber) % this.puzzleStatus.length;
 
     if (modulus === 0) {
         return false;
@@ -130,7 +125,7 @@ export class AppComponent {
 
   private isBox9ToTheLeft(box: HTMLElement): boolean {
     const boxNumber = box.id.replace('box', '');
-    const modulus = Number(boxNumber) % this.x.length;
+    const modulus = Number(boxNumber) % this.puzzleStatus.length;
 
     if (modulus === 1) {
         return false;
@@ -148,10 +143,10 @@ export class AppComponent {
 
   private isBox9OnTop(box: HTMLElement): boolean {
     const boxNumber = (Number)(box.id.replace('box', ''));
-    if (boxNumber <= this.x.length) {
+    if (boxNumber <= this.puzzleStatus.length) {
         return false;
     }
-    const boxOnTop = document.getElementById('box'.concat((boxNumber - this.x.length).toString()));
+    const boxOnTop = document.getElementById('box'.concat((boxNumber - this.puzzleStatus.length).toString()));
     const boxOnTopTextContent = boxOnTop.textContent;
 
     if (boxOnTopTextContent === '9') {
@@ -163,10 +158,10 @@ export class AppComponent {
 
   private isBox9Below(box: HTMLElement): boolean {
     const boxNumber = (Number)(box.id.replace('box', ''));
-    if (boxNumber > this.x.length * (this.x.length - 1)) {
+    if (boxNumber > this.puzzleStatus.length * (this.puzzleStatus.length - 1)) {
         return false;
     }
-    const boxBelow = document.getElementById('box'.concat((boxNumber + this.x.length).toString()));
+    const boxBelow = document.getElementById('box'.concat((boxNumber + this.puzzleStatus.length).toString()));
     const boxBelowTextContent = boxBelow.textContent;
 
     if (boxBelowTextContent === '9') {
@@ -206,9 +201,9 @@ export class AppComponent {
   }
 
   private isPuzzleSolved(): boolean {
-    for (let i = 0; i < this.x.length; i++) {
-        for (let j = 0; j < this.x.length; j++) {
-            if (this.x[i][j] !== solved[i][j]) {
+    for (let i = 0; i < this.puzzleStatus.length; i++) {
+        for (let j = 0; j < this.puzzleStatus.length; j++) {
+            if (this.puzzleStatus[i][j] !== puzzleSolved[i][j]) {
                 return false;
             }
         }
