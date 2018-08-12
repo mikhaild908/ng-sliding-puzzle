@@ -1,6 +1,6 @@
 <div style="text-align:center">
   <h1>
-    {{ title }}
+    {{title}}
   </h1>
 </div>
 <div class='container'>
@@ -18,11 +18,18 @@
 </div>
 <div class='container'>
   <div class='row justify-content-center'>
-      <input #newGameButton type="button" value="New Game" (click) = 'reloadPage();' class='btn btn-primary' id='new-game-button'/>
+      <input #newGameButton
+             id='new-game-button'
+             type="button"
+             value="New Game"
+             (click) = 'reloadPage();'
+             class='btn btn-primary'/>
   </div>
 </div>
 <div class='container'>
   <div class='row justify-content-center message'>
-      <div *ngIf='isPuzzleSolved()' class="alert alert-success" role="alert">{{messages}}</div>
+      <div *ngIf='isPuzzleSolved()'
+           class="alert alert-success"
+           role="alert">{{puzzleSolvedMessage}}</div>
   </div>
 </div>

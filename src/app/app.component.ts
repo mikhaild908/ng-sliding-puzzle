@@ -12,8 +12,8 @@ const solved = [
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  messages = '';
-  @ViewChild('newGameButton') newGameButton;
+  title = 'Sliding Puzzle';
+  puzzleSolvedMessage = 'Puzzle solved!!!';
   @ViewChild('box1') box1: ElementRef;
   @ViewChild('box2') box2: ElementRef;
   @ViewChild('box3') box3: ElementRef;
@@ -23,8 +23,6 @@ export class AppComponent {
   @ViewChild('box7') box7: ElementRef;
   @ViewChild('box8') box8: ElementRef;
   @ViewChild('box9') box9: ElementRef;
-
-  title = 'Smiley Sliding Puzzle';
 
   x = [
     [0, 0, 0],
@@ -85,9 +83,9 @@ export class AppComponent {
     this.swap(sourceBox, targetBox);
     this.copyTextContentsIntoArray();
 
-    if (this.isPuzzleSolved()) {
-      this.messages = 'Puzzle solved!!!';
-    }
+    // if (this.isPuzzleSolved()) {
+    //   this.messages = 'Puzzle solved!!!';
+    // }
 
     this.addRemoveEventHandlersToSquares();
   }
