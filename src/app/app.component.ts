@@ -12,7 +12,7 @@ const solved = [
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  messages: string = '';
+  messages = '';
   @ViewChild('newGameButton') newGameButton;
   @ViewChild('box1') box1: ElementRef;
   @ViewChild('box2') box2: ElementRef;
@@ -69,21 +69,21 @@ export class AppComponent {
 
   private drop(event): void {
     event.preventDefault();
-    
-    let sourceBoxId = event.dataTransfer.getData('text').toString().replace('box', '');
-    let targetBoxId = event.target.id.toString().replace('box', '');
 
-    if(sourceBoxId === targetBoxId) {
+    const sourceBoxId = event.dataTransfer.getData('text').toString().replace('box', '');
+    const targetBoxId = event.target.id.toString().replace('box', '');
+
+    if (sourceBoxId === targetBoxId) {
       return;
     }
 
-    let sourceBox = this.getBoxById(sourceBoxId);
-    let targetBox = this.getBoxById(targetBoxId);
+    const sourceBox = this.getBoxById(sourceBoxId);
+    const targetBox = this.getBoxById(targetBoxId);
 
     this.swap(sourceBox, targetBox);
     this.copyTextContentsIntoArray();
 
-    if(this.isPuzzleSolved()) {
+    if (this.isPuzzleSolved()) {
       this.messages = 'Puzzle solved!!!';
     }
 
@@ -91,37 +91,37 @@ export class AppComponent {
   }
 
   private swapTextContent(source, target): void {
-    let targetTextContent = target.nativeElement.textContent;
+    const targetTextContent = target.nativeElement.textContent;
     target.nativeElement.textContent = source.nativeElement.textContent;
     source.nativeElement.textContent = targetTextContent;
   }
-  
-  private swapBackgrounds(source:ElementRef, target:ElementRef): void {
-    let sourceBoxBackground = window.getComputedStyle(source.nativeElement, null).getPropertyValue('background');
+
+  private swapBackgrounds(source: ElementRef, target: ElementRef): void {
+    const sourceBoxBackground = window.getComputedStyle(source.nativeElement, null).getPropertyValue('background');
     this.renderer.setStyle(target.nativeElement, 'background', sourceBoxBackground);
     this.renderer.setStyle(source.nativeElement, 'background', 'black');
   }
 
   private copyTextContentsIntoArray(): void {
-    for(let i = 0; i < this.x.length; i++) {
-        for(let j = 0; j < this.x.length; j++) {
+    for (let i = 0; i < this.x.length; i++) {
+        for (let j = 0; j < this.x.length; j++) {
             this.x[i][j] = Number(this.squares[i * this.x.length + j].nativeElement.textContent);
         }
     }
   }
 
   private isBox9ToTheRight(box): boolean {
-    let boxNumber = box.id.replace('box', '');
-    let modulus = Number(boxNumber) % this.x.length;
+    const boxNumber = box.id.replace('box', '');
+    const modulus = Number(boxNumber) % this.x.length;
 
-    if(modulus == 0) {
+    if (modulus === 0) {
         return false;
     }
 
-    let boxToTheRight = document.getElementById('box'.concat((Number(boxNumber) + 1).toString()));
-    let boxToTheRightTextContent = boxToTheRight.textContent;
-    
-    if(boxToTheRightTextContent == '9') {
+    const boxToTheRight = document.getElementById('box'.concat((Number(boxNumber) + 1).toString()));
+    const boxToTheRightTextContent = boxToTheRight.textContent;
+
+    if (boxToTheRightTextContent === '9') {
         return true;
     }
 
@@ -129,17 +129,17 @@ export class AppComponent {
   }
 
   private isBox9ToTheLeft(box): boolean {
-    let boxNumber = box.id.replace('box', '');
-    let modulus = Number(boxNumber) % this.x.length;
-    
-    if(modulus == 1) {
+    const boxNumber = box.id.replace('box', '');
+    const modulus = Number(boxNumber) % this.x.length;
+
+    if (modulus === 1) {
         return false;
     }
 
-    let boxToTheLeft = document.getElementById('box'.concat((Number(boxNumber) - 1).toString()));
-    let boxToTheLeftTextContent = boxToTheLeft.textContent;
-    
-    if(boxToTheLeftTextContent == '9') {
+    const boxToTheLeft = document.getElementById('box'.concat((Number(boxNumber) - 1).toString()));
+    const boxToTheLeftTextContent = boxToTheLeft.textContent;
+
+    if (boxToTheLeftTextContent === '9') {
         return true;
     }
 
@@ -147,14 +147,14 @@ export class AppComponent {
   }
 
   private isBox9OnTop(box): boolean {
-    let boxNumber = (Number)(box.id.replace('box', ''));
-    if(boxNumber <= this.x.length) {
+    const boxNumber = (Number)(box.id.replace('box', ''));
+    if (boxNumber <= this.x.length) {
         return false;
     }
-    let boxOnTop = document.getElementById('box'.concat((boxNumber - this.x.length).toString()));
-    let boxOnTopTextContent = boxOnTop.textContent;
-    
-    if(boxOnTopTextContent == '9') {
+    const boxOnTop = document.getElementById('box'.concat((boxNumber - this.x.length).toString()));
+    const boxOnTopTextContent = boxOnTop.textContent;
+
+    if (boxOnTopTextContent === '9') {
         return true;
     }
 
@@ -162,14 +162,14 @@ export class AppComponent {
   }
 
   private isBox9Below(box): boolean {
-    let boxNumber = (Number)(box.id.replace('box', ''));
-    if(boxNumber > this.x.length * (this.x.length - 1)) {
+    const boxNumber = (Number)(box.id.replace('box', ''));
+    if (boxNumber > this.x.length * (this.x.length - 1)) {
         return false;
     }
-    let boxBelow = document.getElementById('box'.concat((boxNumber + this.x.length).toString()));
-    let boxBelowTextContent = boxBelow.textContent;
-    
-    if(boxBelowTextContent == '9') {
+    const boxBelow = document.getElementById('box'.concat((boxNumber + this.x.length).toString()));
+    const boxBelowTextContent = boxBelow.textContent;
+
+    if (boxBelowTextContent === '9') {
         return true;
     }
 
@@ -185,7 +185,7 @@ export class AppComponent {
       this.renderer.setProperty(s.nativeElement, 'draggable', false);
     });
 
-    if(this.isPuzzleSolved()) {
+    if (this.isPuzzleSolved()) {
       return;
     }
 
@@ -193,9 +193,8 @@ export class AppComponent {
       if (s.nativeElement.textContent === '9') {
         s.nativeElement.addEventListener('drop', this.drop, false);
         s.nativeElement.addEventListener('dragover', this.allowDrop, false);
-      }
-      else {
-        if(this.isBox9Below(s.nativeElement) ||
+      } else {
+        if (this.isBox9Below(s.nativeElement) ||
            this.isBox9OnTop(s.nativeElement) ||
            this.isBox9ToTheLeft(s.nativeElement) ||
            this.isBox9ToTheRight(s.nativeElement)) {
@@ -207,33 +206,33 @@ export class AppComponent {
   }
 
   private isPuzzleSolved(): boolean {
-    for(let i = 0; i < this.x.length; i++) {
-        for(let j = 0; j < this.x.length; j++) {
-            if(this.x[i][j] != solved[i][j]) {
+    for (let i = 0; i < this.x.length; i++) {
+        for (let j = 0; j < this.x.length; j++) {
+            if (this.x[i][j] !== solved[i][j]) {
                 return false;
             }
-        }    
+        }
     }
 
     return true;
   }
 
   private scramblePuzzlePieces(maxNumberOfMoves): void {
-      //this.manualScramble();
+      // this.manualScramble();
 
-      for(let i:number = 0; i < maxNumberOfMoves; i++) {
-        let swappable = this.getSwappable();
-        //console.log(swappable);
+      for (let i = 0; i < maxNumberOfMoves; i++) {
+        const swappable = this.getSwappable();
+        // console.log(swappable);
 
         let swapWith9 = null;
-        
-        while(swapWith9 === null) {
+
+        while (swapWith9 === null) {
           let random = this.getRandomInt(3);
 
-          while(swappable[random] === null || swappable[random].textContent === '9') {
+          while (swappable[random] === null || swappable[random].textContent === '9') {
             random = this.getRandomInt(3);
           }
-          
+
           swapWith9 = this.getBoxByTextContent(swappable[random].textContent);
         }
 
@@ -244,24 +243,21 @@ export class AppComponent {
   }
 
   private getSwappable(): [HTMLElement, HTMLElement, HTMLElement] {
-    let swappable: [HTMLElement, HTMLElement, HTMLElement] = [null, null, null];
-    
+    const swappable: [HTMLElement, HTMLElement, HTMLElement] = [null, null, null];
+
     this.squares.forEach(s => {
       if (s.nativeElement.textContent === '9') {
         // do nothing
-      }
-      else {
-        if(this.isBox9Below(s.nativeElement) ||
+      } else {
+        if (this.isBox9Below(s.nativeElement) ||
            this.isBox9OnTop(s.nativeElement) ||
            this.isBox9ToTheLeft(s.nativeElement) ||
            this.isBox9ToTheRight(s.nativeElement)) {
-          if(swappable[0] === null) {
+          if (swappable[0] === null) {
             swappable[0] = s.nativeElement;
-          }
-          else if (swappable[1] === null){
+          } else if (swappable[1] === null) {
             swappable[1] = s.nativeElement;
-          }
-          else {
+          } else {
             swappable[2] = s.nativeElement;
           }
         }
@@ -271,7 +267,7 @@ export class AppComponent {
     return swappable;
   }
 
-  private getBoxById(id:string): ElementRef {
+  private getBoxById(id: string): ElementRef {
     switch (id) {
       case '1': {
         return this.box1;
@@ -304,7 +300,7 @@ export class AppComponent {
   }
 
   private getBoxByTextContent(content: string) {
-    for(let i = 0; i < this.squares.length; i++) {
+    for (let i = 0; i < this.squares.length; i++) {
       if (this.squares[i].nativeElement.textContent === content) {
         return this.squares[i];
       }
