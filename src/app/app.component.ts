@@ -25,12 +25,14 @@ export class AppComponent {
   @ViewChild('box9') box9: ElementRef;
 
   title = 'Smiley Sliding Puzzle';
+
   x = [
     [0, 0, 0],
     [0, 0, 0],
     [0, 0, 0]
   ];
-  squares = [];
+
+  squares: Array<ElementRef>;
 
   constructor(private renderer: Renderer2) { }
 
@@ -59,15 +61,15 @@ export class AppComponent {
     this.swapTextContent(source, target);
   }
 
-  private allowDrop(event): void {
+  private allowDrop(event: DragEvent): void {
     event.preventDefault();
   }
 
-  private drag(event): void {
+  private drag(event: DragEvent & {target: HTMLElement}): void {
     event.dataTransfer.setData('text', event.target.id);
   }
 
-  private drop(event): void {
+  private drop(event: DragEvent & {target: HTMLElement}): void {
     event.preventDefault();
 
     const sourceBoxId = event.dataTransfer.getData('text').toString().replace('box', '');
@@ -90,7 +92,7 @@ export class AppComponent {
     this.addRemoveEventHandlersToSquares();
   }
 
-  private swapTextContent(source, target): void {
+  private swapTextContent(source: ElementRef, target: ElementRef): void {
     const targetTextContent = target.nativeElement.textContent;
     target.nativeElement.textContent = source.nativeElement.textContent;
     source.nativeElement.textContent = targetTextContent;
@@ -110,7 +112,7 @@ export class AppComponent {
     }
   }
 
-  private isBox9ToTheRight(box): boolean {
+  private isBox9ToTheRight(box: HTMLElement): boolean {
     const boxNumber = box.id.replace('box', '');
     const modulus = Number(boxNumber) % this.x.length;
 
@@ -128,7 +130,7 @@ export class AppComponent {
     return false;
   }
 
-  private isBox9ToTheLeft(box): boolean {
+  private isBox9ToTheLeft(box: HTMLElement): boolean {
     const boxNumber = box.id.replace('box', '');
     const modulus = Number(boxNumber) % this.x.length;
 
@@ -146,7 +148,7 @@ export class AppComponent {
     return false;
   }
 
-  private isBox9OnTop(box): boolean {
+  private isBox9OnTop(box: HTMLElement): boolean {
     const boxNumber = (Number)(box.id.replace('box', ''));
     if (boxNumber <= this.x.length) {
         return false;
@@ -161,7 +163,7 @@ export class AppComponent {
     return false;
   }
 
-  private isBox9Below(box): boolean {
+  private isBox9Below(box: HTMLElement): boolean {
     const boxNumber = (Number)(box.id.replace('box', ''));
     if (boxNumber > this.x.length * (this.x.length - 1)) {
         return false;
@@ -217,7 +219,7 @@ export class AppComponent {
     return true;
   }
 
-  private scramblePuzzlePieces(maxNumberOfMoves): void {
+  private scramblePuzzlePieces(maxNumberOfMoves: number): void {
       // this.manualScramble();
 
       for (let i = 0; i < maxNumberOfMoves; i++) {
